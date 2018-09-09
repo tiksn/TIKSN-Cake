@@ -4,7 +4,7 @@ using Cake.Core.Diagnostics;
 
 namespace TIKSN.Cake.Addin
 {
-    [CakeAliasCategory("Sample")]
+    [CakeAliasCategory("TIKSN.Cake")]
     public static class AddinAliases
     {
         [CakeMethodAlias]
