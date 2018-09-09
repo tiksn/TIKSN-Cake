@@ -20,7 +20,7 @@ namespace TIKSN.Cake.Addin
 
         public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
         {
-            return _cakeLog.Verbosity >= ConvertToCakeLogVerbosity(logLevel);
+            return _cakeLog.Verbosity <= ConvertToCakeLogVerbosity(logLevel);
         }
 
         public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)

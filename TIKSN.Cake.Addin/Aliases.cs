@@ -1,8 +1,10 @@
 using Cake.Core;
 using Cake.Core.Annotations;
-using Cake.Core.Diagnostics;
+using Cake.Core.IO;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using TIKSN.Cake.Core;
+using TIKSN.Cake.Core.Services;
 
 namespace TIKSN.Cake.Addin
 {
@@ -21,9 +23,10 @@ namespace TIKSN.Cake.Addin
         }
 
         [CakeMethodAlias]
-        public static void Hello(this ICakeContext ctx, string name)
+        public static void SetTrashParentDirectory(this ICakeContext ctx, DirectoryPath rootDirectoryPath)
         {
-            ctx.Log.Information("Hello " + name);
+            var trashFolderServices = serviceProvider.GetRequiredService<ITrashFolderServices>();
+            trashFolderServices.SetTrashParentFolder(new LoggerAdapter(ctx.Log), rootDirectoryPath.FullPath);
         }
     }
 }

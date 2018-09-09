@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TIKSN.Cake.Core.Services;
 using TIKSN.DependencyInjection;
 
 namespace TIKSN.Cake.Core
@@ -13,6 +14,7 @@ namespace TIKSN.Cake.Core
 
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
         {
+            builder.RegisterType<TrashFolderServices>().As<ITrashFolderServices>().SingleInstance();
         }
 
         protected override void ConfigureOptions(IServiceCollection services, IConfigurationRoot configuration)
