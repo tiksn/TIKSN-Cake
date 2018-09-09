@@ -7,6 +7,7 @@ using TIKSN.Cake.Core;
 namespace TIKSN.Cake.Addin
 {
     [CakeAliasCategory("TIKSN.Cake")]
+    [CakeNamespaceImport("TIKSN.Cake.Addin")]
     public static class AddinAliases
     {
         private static readonly IServiceProvider serviceProvider;
