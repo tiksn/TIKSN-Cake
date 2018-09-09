@@ -18,6 +18,17 @@ namespace TIKSN.Cake.Core.Services
             _random = random ?? throw new ArgumentNullException(nameof(random));
         }
 
+        public string CreateTrashSubFolder(ILogger logger, string subfolderName)
+        {
+            var subfolderFullPath = Path.Combine(trashDirectoryFullPath, subfolderName);
+
+            Directory.CreateDirectory(subfolderFullPath);
+
+            logger.LogDebug($"Trash sub-folder is created in location '{subfolderFullPath}'.");
+
+            return subfolderFullPath;
+        }
+
         public void SetTrashParentFolder(ILogger logger, string rootDirectoryFullPath)
         {
             if (rootDirectoryFullPath == null)
@@ -35,7 +46,7 @@ namespace TIKSN.Cake.Core.Services
 
                 trashDirectoryFullPath = Path.Combine(rootDirectoryFullPath, ".trash", $"{_timeProvider.GetCurrentTime().Ticks}-{_random.Next()}");
                 Directory.CreateDirectory(trashDirectoryFullPath);
-                logger.LogTrace($"Trash folder is created in location '{trashDirectoryFullPath}'.");
+                logger.LogDebug($"Trash folder is created in location '{trashDirectoryFullPath}'.");
             }
         }
     }

@@ -7,7 +7,7 @@
 
 Setup(context =>
 {
-    SetTrashParentDirectory(GitFindRootFromPath(MakeAbsolute(Directory("."))));
+    SetTrashParentDirectory(GitFindRootFromPath("."));
 });
 
 Teardown(context =>
@@ -18,6 +18,7 @@ Teardown(context =>
 Task("A")
     .Does(() =>
 {
+    var artifacts = CreateTrashSubDirectory("artifacts");
 });
 
 RunTarget("A");

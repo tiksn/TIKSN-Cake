@@ -23,6 +23,15 @@ namespace TIKSN.Cake.Addin
         }
 
         [CakeMethodAlias]
+        public static DirectoryPath CreateTrashSubDirectory(this ICakeContext ctx, string subdirectoryName)
+        {
+            var trashFolderServices = serviceProvider.GetRequiredService<ITrashFolderServices>();
+            var subdirectoryPath = trashFolderServices.CreateTrashSubFolder(new LoggerAdapter(ctx.Log), subdirectoryName);
+
+            return new DirectoryPath(subdirectoryName);
+        }
+
+        [CakeMethodAlias]
         public static void SetTrashParentDirectory(this ICakeContext ctx, DirectoryPath rootDirectoryPath)
         {
             var trashFolderServices = serviceProvider.GetRequiredService<ITrashFolderServices>();
