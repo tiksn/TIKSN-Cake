@@ -10,7 +10,7 @@ namespace TIKSN.Cake.Core.Services
         private static object trashDirectoryFullPathLocker = new object();
         private readonly Random _random;
         private readonly ITimeProvider _timeProvider;
-        private string trashDirectoryFullPath;
+        private string _trashDirectoryFullPath;
 
         public TrashFolderServices(ITimeProvider timeProvider, Random random)
         {
@@ -20,13 +20,21 @@ namespace TIKSN.Cake.Core.Services
 
         public string CreateTrashSubFolder(ILogger logger, string subfolderName)
         {
-            var subfolderFullPath = Path.Combine(trashDirectoryFullPath, subfolderName);
+            var subfolderFullPath = Path.Combine(_trashDirectoryFullPath, subfolderName);
 
             Directory.CreateDirectory(subfolderFullPath);
 
             logger.LogDebug($"Trash sub-folder is created in location '{subfolderFullPath}'.");
 
             return subfolderFullPath;
+        }
+
+        public string GetTrashFolder(ILogger logger)
+        {
+            if (_trashDirectoryFullPath == null)
+                throw new SystemException($"Variable with name '{nameof(_trashDirectoryFullPath)}' is not set yet.");
+
+            return _trashDirectoryFullPath;
         }
 
         public void SetTrashParentFolder(ILogger logger, string rootDirectoryFullPath)
@@ -41,12 +49,12 @@ namespace TIKSN.Cake.Core.Services
 
             lock (trashDirectoryFullPathLocker)
             {
-                if (trashDirectoryFullPath != null)
-                    throw new SystemException($"Variable with name '{nameof(trashDirectoryFullPath)}' is already set.");
+                if (_trashDirectoryFullPath != null)
+                    throw new SystemException($"Variable with name '{nameof(_trashDirectoryFullPath)}' is already set.");
 
-                trashDirectoryFullPath = Path.Combine(rootDirectoryFullPath, ".trash", $"{_timeProvider.GetCurrentTime().Ticks}-{_random.Next()}");
-                Directory.CreateDirectory(trashDirectoryFullPath);
-                logger.LogDebug($"Trash folder is created in location '{trashDirectoryFullPath}'.");
+                _trashDirectoryFullPath = Path.Combine(rootDirectoryFullPath, ".trash", $"{_timeProvider.GetCurrentTime().Ticks}-{_random.Next()}");
+                Directory.CreateDirectory(_trashDirectoryFullPath);
+                logger.LogDebug($"Trash folder is created in location '{_trashDirectoryFullPath}'.");
             }
         }
     }

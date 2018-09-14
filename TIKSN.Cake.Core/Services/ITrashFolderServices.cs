@@ -4,8 +4,10 @@ namespace TIKSN.Cake.Core.Services
 {
     public interface ITrashFolderServices
     {
-        void SetTrashParentFolder(ILogger logger, string rootDirectoryFullPath);
-
         string CreateTrashSubFolder(ILogger logger, string subfolderName);
+
+        string GetTrashFolder(ILogger logger);
+
+        void SetTrashParentFolder(ILogger logger, string rootDirectoryFullPath);
     }
 }
