@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>TIKSN-Cake</id>
+        <version>1.0.0</version>
+        <title>TIKSN Cake</title>
+        <authors>TIKSN</authors>
+        <owners>TIKSN</owners>
+        <projectUrl>http://www.tiksn.com/Framework</projectUrl>
+        <iconUrl>http://www.tiksn.com/Images/Logo.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>TIKSN Cake Addin</description>
+        <copyright>Copyright © 2018, TIKSN Lab</copyright>
+        <releaseNotes></releaseNotes>
+        <language />
+        <tags>Cake</tags>
+        <dependencies>
+            <group targetFramework="netstandard2.0">
+                <dependency id="Cake.Core" version="0.30.0" />
+                <dependency id="TIKSN-Framework" version="3.0.1" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="TIKSN.Cake.Core\bin\Release\netstandard2.0\TIKSN.Cake.Core.dll" target="lib\netstandard2.0" />
+        <file src="TIKSN.Cake.Core\bin\Release\netstandard2.0\TIKSN.Cake.Core.pdb" target="lib\netstandard2.0" />
+        <file src="TIKSN.Cake.Addin\bin\Release\netstandard2.0\TIKSN.Cake.Addin.dll" target="lib\netstandard2.0" />
+        <file src="TIKSN.Cake.Addin\bin\Release\netstandard2.0\TIKSN.Cake.Addin.pdb" target="lib\netstandard2.0" />
+    </files>
+</package>
