@@ -28,7 +28,7 @@ namespace TIKSN.Cake.Addin
             var trashFolderServices = serviceProvider.GetRequiredService<ITrashFolderServices>();
             var subdirectoryPath = trashFolderServices.CreateTrashSubFolder(new LoggerAdapter(ctx.Log), subdirectoryName);
 
-            return new DirectoryPath(subdirectoryName);
+            return new DirectoryPath(subdirectoryPath);
         }
 
         [CakeMethodAlias]
