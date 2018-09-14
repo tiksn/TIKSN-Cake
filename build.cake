@@ -33,7 +33,7 @@ Task("Publish")
   .IsDependentOn("Pack")
   .Does(() =>
 {
- var package = string.Format("tools/TIKSN-Cake.{0}.nupkg", nextVersionString);
+ var package = string.Format("{0}/TIKSN-Cake.{1}.nupkg", GetTrashDirectory(), nextVersionString);
 
  NuGetPush(package, new NuGetPushSettings {
      Source = "nuget.org",
@@ -51,7 +51,7 @@ Task("Pack")
   var nuGetPackSettings = new NuGetPackSettings {
     Version = nextVersionString,
     BasePath = buildArtifactsDir,
-    OutputDirectory = "tools" // GetTrashDirectory()
+    OutputDirectory = GetTrashDirectory()
     };
 
   NuGetPack(nuspec, nuGetPackSettings);
