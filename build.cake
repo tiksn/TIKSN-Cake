@@ -16,6 +16,7 @@ var nextVersionString = "";
 using System;
 using System.Linq;
 using NuGet.Versioning;
+DirectoryPath buildArtifactsDir;
 
 Setup(context =>
 {
@@ -49,7 +50,8 @@ Task("Pack")
 {
   var nuGetPackSettings = new NuGetPackSettings {
     Version = nextVersionString,
-    OutputDirectory = "tools"
+    BasePath = buildArtifactsDir,
+    OutputDirectory = "tools" // GetTrashDirectory()
     };
 
   NuGetPack(nuspec, nuGetPackSettings);
@@ -68,12 +70,15 @@ Task("Build")
   .IsDependentOn("Restore")
   .Does(() =>
 {
+  buildArtifactsDir = CreateTrashSubDirectory("artifacts");
+
   MSBuild(solution, configurator =>
     configurator.SetConfiguration("Release")
         .SetVerbosity(Verbosity.Minimal)
         .UseToolVersion(MSBuildToolVersion.VS2017)
         .SetMSBuildPlatform(MSBuildPlatform.x64)
         .SetPlatformTarget(PlatformTarget.MSIL)
+        .WithProperty("OutDir", buildArtifactsDir.FullPath)
         //.WithTarget("Rebuild")
         );
 });
