@@ -19,7 +19,7 @@ using NuGet.Versioning;
 
 Setup(context =>
 {
-    // SetTrashParentDirectory(GitFindRootFromPath("."));
+    SetTrashParentDirectory(GitFindRootFromPath("."));
 });
 
 Teardown(context =>
