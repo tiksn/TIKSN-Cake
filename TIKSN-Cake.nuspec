@@ -23,9 +23,9 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="TIKSN.Cake.Core\bin\Release\netstandard2.0\TIKSN.Cake.Core.dll" target="lib\netstandard2.0" />
-        <file src="TIKSN.Cake.Core\bin\Release\netstandard2.0\TIKSN.Cake.Core.pdb" target="lib\netstandard2.0" />
-        <file src="TIKSN.Cake.Addin\bin\Release\netstandard2.0\TIKSN.Cake.Addin.dll" target="lib\netstandard2.0" />
-        <file src="TIKSN.Cake.Addin\bin\Release\netstandard2.0\TIKSN.Cake.Addin.pdb" target="lib\netstandard2.0" />
+        <file src="TIKSN.Cake.Core.dll" target="lib\netstandard2.0" />
+        <file src="TIKSN.Cake.Core.pdb" target="lib\netstandard2.0" />
+        <file src="TIKSN.Cake.Addin.dll" target="lib\netstandard2.0" />
+        <file src="TIKSN.Cake.Addin.pdb" target="lib\netstandard2.0" />
     </files>
 </package>
