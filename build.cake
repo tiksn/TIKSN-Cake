@@ -94,6 +94,18 @@ Task("EstimateNextVersion")
   var latestPackage = packageList.Single();
   var latestPackageNuGetVersion = new NuGetVersion(latestPackage.Version);
   var nextVersion = new NuGetVersion(latestPackageNuGetVersion.Version.Major,latestPackageNuGetVersion.Version.Minor,latestPackageNuGetVersion.Version.Build + 1);
+
+  if(HasArgument("next_version"))
+  {
+    var nextVersionArgumentString = Argument<string>("next_version");
+    var nextVersionArgument = new NuGetVersion(nextVersionArgumentString);
+
+    if(latestPackageNuGetVersion >= nextVersionArgument)
+      throw new ArgumentException("Higher version is already published.");
+    
+    nextVersion = nextVersionArgument;
+  }
+  
   nextVersionString = nextVersion.ToString();
   Information("Next version estimated to be " + nextVersionString);
 });
