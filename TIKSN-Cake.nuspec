@@ -19,8 +19,7 @@
             <group targetFramework="netstandard2.0">
                 <dependency id="Cake.Core" version="0.30.0" />
                 <dependency id="TIKSN-Framework" version="3.0.1" />
-                <dependency id="Microsoft.CodeAnalysis.CSharp" version="2.9.0" />
-                <dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="2.9.0" />
+                <dependency id="Microsoft.CodeAnalysis.CSharp.Workspaces" version="2.9.0" />
             </group>
         </dependencies>
     </metadata>
