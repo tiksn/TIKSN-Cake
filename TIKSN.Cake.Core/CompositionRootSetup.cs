@@ -15,6 +15,7 @@ namespace TIKSN.Cake.Core
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
         {
             builder.RegisterType<TrashFolderServices>().As<ITrashFolderServices>().SingleInstance();
+            builder.RegisterType<LocalizationKeysGenerator>().As<ILocalizationKeysGenerator>().SingleInstance();
         }
 
         protected override void ConfigureOptions(IServiceCollection services, IConfigurationRoot configuration)

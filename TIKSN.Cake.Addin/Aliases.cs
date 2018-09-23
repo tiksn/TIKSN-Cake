@@ -3,6 +3,7 @@ using Cake.Core.Annotations;
 using Cake.Core.IO;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using TIKSN.Cake.Core;
 using TIKSN.Cake.Core.Services;
 
@@ -29,6 +30,22 @@ namespace TIKSN.Cake.Addin
             var subdirectoryPath = trashFolderServices.CreateTrashSubFolder(new LoggerAdapter(ctx.Log), subdirectoryName);
 
             return new DirectoryPath(subdirectoryPath);
+        }
+
+        [CakeMethodAlias]
+        public static void GenerateLocalizationKeys(
+            this ICakeContext ctx,
+            string @namespace,
+            string @class,
+            DirectoryPath outputDirectory,
+            params FilePath[] resxFiles)
+        {
+            var localizationKeysGenerator = serviceProvider.GetRequiredService<ILocalizationKeysGenerator>();
+            localizationKeysGenerator.GenerateLocalizationKeys(
+                @namespace,
+                @class,
+                outputDirectory.FullPath,
+                resxFiles.Select(f => f.FullPath).ToArray());
         }
 
         [CakeMethodAlias]
