@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Editing;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -8,7 +9,7 @@ namespace TIKSN.Cake.Core.Services
 {
     public class LocalizationKeysGenerator : ILocalizationKeysGenerator
     {
-        public void GenerateLocalizationKeys(string @namespace, string @class, string outputFolder, string[] resxFiles)
+        public void GenerateLocalizationKeys(ILogger logger, string @namespace, string @class, string outputFolder, string[] resxFiles)
         {
             var dataElements = resxFiles
                 .Select(XDocument.Load)
@@ -21,7 +22,8 @@ namespace TIKSN.Cake.Core.Services
             var keyFields = keys.Select(key => generator.FieldDeclaration($"Key{key}",
                 generator.TypeExpression(SpecialType.System_Int32),
                 accessibility: Accessibility.Public,
-                modifiers: DeclarationModifiers.Const))
+                modifiers: DeclarationModifiers.Const,
+                initializer: generator.LiteralExpression(key)))
                 .ToArray();
 
             var classDefinition = generator.ClassDeclaration(

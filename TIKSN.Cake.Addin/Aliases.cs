@@ -42,6 +42,7 @@ namespace TIKSN.Cake.Addin
         {
             var localizationKeysGenerator = serviceProvider.GetRequiredService<ILocalizationKeysGenerator>();
             localizationKeysGenerator.GenerateLocalizationKeys(
+                new LoggerAdapter(ctx.Log),
                 @namespace,
                 @class,
                 outputDirectory.FullPath,
