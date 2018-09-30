@@ -2,6 +2,7 @@
 using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TIKSN.Cake.Core.Services.VersioningStrategies;
 
 namespace TIKSN.Cake.Core.Services
@@ -9,36 +10,14 @@ namespace TIKSN.Cake.Core.Services
     public class VersioningService
     {
         private readonly object _versionGetterLocker = new object();
+        private readonly Dictionary<string, IVersioningStrategy> _versioningStrategies = new Dictionary<string, IVersioningStrategy>(StringComparer.OrdinalIgnoreCase);
         private readonly object _versionSetterLocker = new object();
 
-        private Versioning.Version[] _versions;
+        private Versioning.Version _latestVersion;
         private Versioning.Version _nextVersion;
-
-        private readonly Dictionary<string, IVersioningStrategy> _versioningStrategies = new Dictionary<string, IVersioningStrategy>(StringComparer.OrdinalIgnoreCase);
 
         public VersioningService()
         {
-
-        }
-
-        public void SetVersions(ILogger logger, IEnumerable<NuGetVersion> versions, bool ignoreUnconventionalVersions)
-        {
-            SetVersions(logger, versions, ignoreUnconventionalVersions, v => (Versioning.Version)v);
-        }
-
-        public void SetVersions(ILogger logger, IEnumerable<SemanticVersion> versions, bool ignoreUnconventionalVersions)
-        {
-            SetVersions(logger, versions, ignoreUnconventionalVersions, v => (Versioning.Version)v);
-        }
-
-        public void SetVersions(ILogger logger, IEnumerable<Versioning.Version> versions, bool ignoreUnconventionalVersions)
-        {
-            SetVersions(logger, versions, ignoreUnconventionalVersions, v => v);
-        }
-
-        public void SetVersions(ILogger logger, IEnumerable<Version> versions, bool ignoreUnconventionalVersions)
-        {
-            SetVersions(logger, versions, ignoreUnconventionalVersions, v => new Versioning.Version(v));
         }
 
         public Versioning.Version GetNextVersion(ILogger logger, string nextVersionArgument, string nextVersionStrategyArgument)
@@ -57,7 +36,7 @@ namespace TIKSN.Cake.Core.Services
                 if (nextVersionArgument != null)
                     _nextVersion = (Versioning.Version)NuGetVersion.Parse(nextVersionArgument);
                 else
-                    _nextVersion = _versioningStrategies[nextVersionStrategyArgument].GetNextVersion(_versions);
+                    _nextVersion = _versioningStrategies[nextVersionStrategyArgument].GetNextVersion(_latestVersion);
 
                 logger.LogDebug($"Estimated next version to be '{_nextVersion}'.");
             }
@@ -65,36 +44,39 @@ namespace TIKSN.Cake.Core.Services
             return _nextVersion;
         }
 
-        private void SetVersions<T>(ILogger logger, IEnumerable<T> versions, bool ignoreUnconventionalVersions, Func<T, Versioning.Version> convert)
+        public void SetVersions(ILogger logger, IEnumerable<NuGetVersion> versions)
         {
-            var results = new List<Versioning.Version>();
+            SetVersions(logger, versions, v => (Versioning.Version)v);
+        }
 
-            foreach (var version in versions)
-            {
-                try
-                {
-                    var result = convert(version);
-                    results.Add(result);
-                }
-                catch (Exception ex)
-                {
-                    if (ignoreUnconventionalVersions)
-                    {
-                        logger.LogError(ex, ex.Message);
+        public void SetVersions(ILogger logger, IEnumerable<SemanticVersion> versions)
+        {
+            SetVersions(logger, versions, v => (Versioning.Version)v);
+        }
 
-                        throw;
-                    }
+        public void SetVersions(ILogger logger, IEnumerable<Versioning.Version> versions)
+        {
+            SetVersions(logger, versions, v => v);
+        }
 
-                    logger.LogWarning($"Version '{version}' cannot be converted to '{typeof(Versioning.Version).FullName}'.");
-                }
-            }
+        public void SetVersions(ILogger logger, IEnumerable<Version> versions)
+        {
+            SetVersions(logger, versions, v => new Versioning.Version(v));
+        }
+
+        private void SetVersions<T>(ILogger logger, IEnumerable<T> versions, Func<T, Versioning.Version> convert)
+        {
+            if (!versions.Any())
+                throw new ArgumentException("Version list provided is empty");
+
+            var latestVersion = versions.Max();
 
             lock (_versionSetterLocker)
             {
-                if (_versions != null)
+                if (_latestVersion != null)
                     throw new InvalidOperationException("Version already set. This operation can be done only once.");
 
-                _versions = results.ToArray();
+                _latestVersion = convert(latestVersion);
             }
         }
     }
