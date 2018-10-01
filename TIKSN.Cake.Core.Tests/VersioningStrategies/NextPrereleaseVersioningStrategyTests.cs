@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
+using NSubstitute;
 using NuGet.Versioning;
 using TIKSN.Cake.Core.Services.VersioningStrategies;
+using TIKSN.Time;
 using TIKSN.Versioning;
 using Xunit;
 
@@ -12,13 +14,15 @@ namespace TIKSN.Cake.Core.Tests.VersioningStrategies
         [InlineData("1.2.3-alpha.1", "1.2.3-alpha.2")]
         [InlineData("1.2.3-beta.14", "1.2.3-beta.15")]
         [InlineData("1.2.3-rc.14", "1.2.3-rc.15")]
-        [InlineData("1.2.3", "1.2.3-alpha.1")]
+        [InlineData("1.2.3.4-alpha.1", "1.2.3.4-alpha.2")]
+        [InlineData("1.2.3.4-beta.14", "1.2.3.4-beta.15")]
+        [InlineData("1.2.3.4-rc.14", "1.2.3.4-rc.15")]
         public void GetNextVersionTest(string latestVersionString, string expectedNextVersionString)
         {
             var latestVersion = (Version)NuGetVersion.Parse(latestVersionString);
             var expectedNextVersion = (Version)NuGetVersion.Parse(expectedNextVersionString);
-
-            var strategy = new NextPrereleaseVersioningStrategy();
+            var timeProvider = Substitute.For<ITimeProvider>();
+            var strategy = new NextPrereleaseVersioningStrategy(timeProvider);
 
             var nextVersion = strategy.GetNextVersion(latestVersion);
 
@@ -32,10 +36,10 @@ namespace TIKSN.Cake.Core.Tests.VersioningStrategies
         public void GetNextVersionThrowsException(string latestVersionString)
         {
             var latestVersion = (Version)NuGetVersion.Parse(latestVersionString);
+            var timeProvider = Substitute.For<ITimeProvider>();
+            var strategy = new NextPrereleaseVersioningStrategy(timeProvider);
 
-            var strategy = new NextPrereleaseVersioningStrategy();
-
-            Assert.Throws<System.Exception>(() => strategy.GetNextVersion(latestVersion));
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => strategy.GetNextVersion(latestVersion));
         }
     }
 }
