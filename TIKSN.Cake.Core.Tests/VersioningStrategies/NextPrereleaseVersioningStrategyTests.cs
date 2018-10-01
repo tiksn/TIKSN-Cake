@@ -26,6 +26,7 @@ namespace TIKSN.Cake.Core.Tests.VersioningStrategies
         }
 
         [Theory]
+        [InlineData("1.2.0")]
         [InlineData("1.2.3")]
         [InlineData("1.2.3.4")]
         public void GetNextVersionThrowsException(string latestVersionString)
