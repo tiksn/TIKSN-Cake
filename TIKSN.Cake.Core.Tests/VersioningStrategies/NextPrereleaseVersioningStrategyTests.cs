@@ -11,6 +11,8 @@ namespace TIKSN.Cake.Core.Tests.VersioningStrategies
         [Theory]
         [InlineData("1.2.3-alpha.1", "1.2.3-alpha.2")]
         [InlineData("1.2.3-beta.14", "1.2.3-beta.15")]
+        [InlineData("1.2.3-rc.14", "1.2.3-rc.15")]
+        [InlineData("1.2.3", "1.2.3-alpha.1")]
         public void GetNextVersionTest(string latestVersionString, string expectedNextVersionString)
         {
             var latestVersion = (Version)NuGetVersion.Parse(latestVersionString);
@@ -21,6 +23,18 @@ namespace TIKSN.Cake.Core.Tests.VersioningStrategies
             var nextVersion = strategy.GetNextVersion(latestVersion);
 
             nextVersion.Should().Be(expectedNextVersion);
+        }
+
+        [Theory]
+        [InlineData("1.2.3")]
+        [InlineData("1.2.3.4")]
+        public void GetNextVersionThrowsException(string latestVersionString)
+        {
+            var latestVersion = (Version)NuGetVersion.Parse(latestVersionString);
+
+            var strategy = new NextPrereleaseVersioningStrategy();
+
+            Assert.Throws<System.Exception>(() => strategy.GetNextVersion(latestVersion));
         }
     }
 }
