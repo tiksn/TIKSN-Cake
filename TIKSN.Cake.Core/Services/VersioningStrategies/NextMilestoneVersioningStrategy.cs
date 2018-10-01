@@ -14,7 +14,14 @@ namespace TIKSN.Cake.Core.Services.VersioningStrategies
 
         public Versioning.Version GetNextVersion(Versioning.Version latestVersion)
         {
-            throw new System.NotImplementedException();
+            if (latestVersion.Stability == Versioning.Stability.Stable)
+                throw new ArgumentOutOfRangeException("Cannot estimate next milestone version for stable latest version.");
+
+            var nextMilestone = latestVersion.Milestone + 1;
+            if (nextMilestone == Versioning.Milestone.Release)
+                return new Versioning.Version(latestVersion.Release, nextMilestone, _timeProvider.GetCurrentTime());
+
+            return new Versioning.Version(latestVersion.Release, nextMilestone, 1, _timeProvider.GetCurrentTime());
         }
     }
 }

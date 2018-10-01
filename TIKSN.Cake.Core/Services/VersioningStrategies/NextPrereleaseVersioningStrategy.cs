@@ -15,7 +15,7 @@ namespace TIKSN.Cake.Core.Services.VersioningStrategies
         public Versioning.Version GetNextVersion(Versioning.Version latestVersion)
         {
             if (latestVersion.Stability == Versioning.Stability.Stable)
-                throw new ArgumentOutOfRangeException("Cannot estimate next version for stable latest version.");
+                throw new ArgumentOutOfRangeException("Cannot estimate next pre-release version for stable latest version.");
 
             return new Versioning.Version(latestVersion.Release, latestVersion.Milestone, latestVersion.PrereleaseNumber + 1, _timeProvider.GetCurrentTime());
         }
