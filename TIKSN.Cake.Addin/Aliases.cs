@@ -2,7 +2,9 @@ using Cake.Core;
 using Cake.Core.Annotations;
 using Cake.Core.IO;
 using Microsoft.Extensions.DependencyInjection;
+using NuGet.Versioning;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TIKSN.Cake.Core;
 using TIKSN.Cake.Core.Services;
@@ -56,6 +58,34 @@ namespace TIKSN.Cake.Addin
             var trashFolderPath = trashFolderServices.GetTrashFolder(new LoggerAdapter(ctx.Log));
 
             return new DirectoryPath(trashFolderPath);
+        }
+
+        [CakeMethodAlias]
+        public static void SetPublishedVersions(this ICakeContext ctx, IEnumerable<NuGetVersion> versions)
+        {
+            var versioningService = serviceProvider.GetRequiredService<IVersioningService>();
+            versioningService.SetVersions(new LoggerAdapter(ctx.Log), versions);
+        }
+
+        [CakeMethodAlias]
+        public static void SetPublishedVersions(this ICakeContext ctx, IEnumerable<SemanticVersion> versions)
+        {
+            var versioningService = serviceProvider.GetRequiredService<IVersioningService>();
+            versioningService.SetVersions(new LoggerAdapter(ctx.Log), versions);
+        }
+
+        [CakeMethodAlias]
+        public static void SetPublishedVersions(this ICakeContext ctx, IEnumerable<Versioning.Version> versions)
+        {
+            var versioningService = serviceProvider.GetRequiredService<IVersioningService>();
+            versioningService.SetVersions(new LoggerAdapter(ctx.Log), versions);
+        }
+
+        [CakeMethodAlias]
+        public static void SetPublishedVersions(this ICakeContext ctx, IEnumerable<System.Version> versions)
+        {
+            var versioningService = serviceProvider.GetRequiredService<IVersioningService>();
+            versioningService.SetVersions(new LoggerAdapter(ctx.Log), versions);
         }
 
         [CakeMethodAlias]
