@@ -11,7 +11,6 @@
 var target = Argument("target", "Publish");
 var solution = "TIKSN Cake.sln";
 var nuspec = "TIKSN-Cake.nuspec";
-var nextVersionString = "";
 
 using System;
 using System.Linq;
@@ -33,7 +32,7 @@ Task("Publish")
   .IsDependentOn("Pack")
   .Does(() =>
 {
- var package = string.Format("{0}/TIKSN-Cake.{1}.nupkg", GetTrashDirectory(), nextVersionString);
+ var package = string.Format("{0}/TIKSN-Cake.{1}.nupkg", GetTrashDirectory(), GetNextEstimatedVersion());
 
  NuGetPush(package, new NuGetPushSettings {
      Source = "nuget.org",
@@ -49,7 +48,7 @@ Task("Pack")
   .Does(() =>
 {
   var nuGetPackSettings = new NuGetPackSettings {
-    Version = nextVersionString,
+    Version = GetNextEstimatedVersion().ToString(),
     BasePath = buildArtifactsDir,
     OutputDirectory = GetTrashDirectory()
     };
@@ -97,25 +96,10 @@ Task("EstimateNextVersion")
 {
   var packageList = NuGetList("TIKSN-Cake", new NuGetListSettings {
       AllVersions = false,
-      Prerelease = false
+      Prerelease = true
       });
-  var latestPackage = packageList.Single();
-  var latestPackageNuGetVersion = new NuGetVersion(latestPackage.Version);
-  var nextVersion = new NuGetVersion(latestPackageNuGetVersion.Version.Major,latestPackageNuGetVersion.Version.Minor,latestPackageNuGetVersion.Version.Build + 1);
-
-  if(HasArgument("next_version"))
-  {
-    var nextVersionArgumentString = Argument<string>("next_version");
-    var nextVersionArgument = new NuGetVersion(nextVersionArgumentString);
-
-    if(latestPackageNuGetVersion >= nextVersionArgument)
-      throw new ArgumentException("Higher version is already published.");
-    
-    nextVersion = nextVersionArgument;
-  }
-  
-  nextVersionString = nextVersion.ToString();
-  Information("Next version estimated to be " + nextVersionString);
+  SetPublishedVersions(packageList.Select(v => new NuGetVersion(v.Version)));
+  Information("Next version estimated to be " + GetNextEstimatedVersion());
 });
 
 Task("Restore")
