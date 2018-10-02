@@ -57,8 +57,8 @@ namespace TIKSN.Cake.Addin
             var versioningService = serviceProvider.GetRequiredService<IVersioningService>();
             return versioningService.GetNextVersion(
                 new LoggerAdapter(ctx.Log),
-                ctx.Arguments.GetNullableArgument("next_version"),
-                ctx.Arguments.GetNullableArgument("next_version_strategy"));
+                ctx.Arguments.GetArgumentOrDefault("next_version"),
+                ctx.Arguments.GetArgumentOrDefault("next_version_strategy"));
         }
 
         [CakeMethodAlias]

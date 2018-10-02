@@ -19,7 +19,7 @@ namespace TIKSN.Cake.Core.Services
 
         public VersioningService(ITimeProvider timeProvider)
         {
-            _versioningStrategies.Add(null, new NextPrereleaseVersioningStrategy(timeProvider));
+            _versioningStrategies.Add(string.Empty, new NextPrereleaseVersioningStrategy(timeProvider));
             _versioningStrategies.Add("prerelease", new NextPrereleaseVersioningStrategy(timeProvider));
             _versioningStrategies.Add("milestone", new NextMilestoneVersioningStrategy(timeProvider));
             _versioningStrategies.Add("revision", new NextRevisionVersioningStrategy(timeProvider));
