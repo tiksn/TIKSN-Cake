@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TIKSN.Cake.Core.Services.VersioningStrategies;
+using TIKSN.Time;
 
 namespace TIKSN.Cake.Core.Services
 {
-    public class VersioningService
+    public class VersioningService : IVersioningService
     {
         private readonly object _versionGetterLocker = new object();
         private readonly Dictionary<string, IVersioningStrategy> _versioningStrategies = new Dictionary<string, IVersioningStrategy>(StringComparer.OrdinalIgnoreCase);
@@ -16,8 +17,15 @@ namespace TIKSN.Cake.Core.Services
         private Versioning.Version _latestVersion;
         private Versioning.Version _nextVersion;
 
-        public VersioningService()
+        public VersioningService(ITimeProvider timeProvider)
         {
+            _versioningStrategies.Add(null, new NextPrereleaseVersioningStrategy(timeProvider));
+            _versioningStrategies.Add("prerelease", new NextPrereleaseVersioningStrategy(timeProvider));
+            _versioningStrategies.Add("milestone", new NextMilestoneVersioningStrategy(timeProvider));
+            _versioningStrategies.Add("revision", new NextRevisionVersioningStrategy(timeProvider));
+            _versioningStrategies.Add("build", new NextBuildVersioningStrategy(timeProvider));
+            _versioningStrategies.Add("minor", new NextMinorVersioningStrategy(timeProvider));
+            _versioningStrategies.Add("major", new NextMajorVersioningStrategy(timeProvider));
         }
 
         public Versioning.Version GetNextVersion(ILogger logger, string nextVersionArgument, string nextVersionStrategyArgument)
