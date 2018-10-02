@@ -52,6 +52,16 @@ namespace TIKSN.Cake.Addin
         }
 
         [CakeMethodAlias]
+        public static Versioning.Version GetNextEstimatedVersion(this ICakeContext ctx)
+        {
+            var versioningService = serviceProvider.GetRequiredService<IVersioningService>();
+            return versioningService.GetNextVersion(
+                new LoggerAdapter(ctx.Log),
+                ctx.Arguments.GetNullableArgument("next_version"),
+                ctx.Arguments.GetNullableArgument("next_version_strategy"));
+        }
+
+        [CakeMethodAlias]
         public static DirectoryPath GetTrashDirectory(this ICakeContext ctx)
         {
             var trashFolderServices = serviceProvider.GetRequiredService<ITrashFolderServices>();
