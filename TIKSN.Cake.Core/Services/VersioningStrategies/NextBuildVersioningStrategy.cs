@@ -15,7 +15,13 @@ namespace TIKSN.Cake.Core.Services.VersioningStrategies
 
         public Versioning.Version GetNextVersion(Versioning.Version latestVersion)
         {
-            throw new System.NotImplementedException();
+            var nextRelease = new Version(
+                latestVersion.Release.Major,
+                latestVersion.Release.Minor,
+                latestVersion.Release.Build == -1 ? 1 : latestVersion.Release.Build + 1,
+                0);
+
+            return new Versioning.Version(nextRelease, _timeProvider.GetCurrentTime());
         }
     }
 }
