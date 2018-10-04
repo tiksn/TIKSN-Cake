@@ -10,15 +10,18 @@ namespace TIKSN.Cake.Core.Services
 {
     public class VersioningService : IVersioningService
     {
-        private readonly object _versionGetterLocker = new object();
+        private readonly object _versionGetterLocker;
         private readonly Dictionary<string, IVersioningStrategy> _versioningStrategies = new Dictionary<string, IVersioningStrategy>(StringComparer.OrdinalIgnoreCase);
-        private readonly object _versionSetterLocker = new object();
+        private readonly object _versionSetterLocker;
 
         private Versioning.Version _latestVersion;
         private Versioning.Version _nextVersion;
 
         public VersioningService(ITimeProvider timeProvider)
         {
+            _versionGetterLocker = new object();
+            _versionSetterLocker = new object();
+
             _versioningStrategies.Add(string.Empty, new NextPrereleaseVersioningStrategy(timeProvider));
             _versioningStrategies.Add("prerelease", new NextPrereleaseVersioningStrategy(timeProvider));
             _versioningStrategies.Add("milestone", new NextMilestoneVersioningStrategy(timeProvider));
@@ -79,12 +82,16 @@ namespace TIKSN.Cake.Core.Services
 
             var latestVersion = versions.Max();
 
+            logger.LogDebug($"Maximum of passed versions is {latestVersion}");
+
             lock (_versionSetterLocker)
             {
                 if (_latestVersion != null)
                     throw new InvalidOperationException("Version already set. This operation can be done only once.");
 
                 _latestVersion = convert(latestVersion);
+
+                logger.LogDebug($"Latest version is determined to be {_latestVersion}");
             }
         }
     }
