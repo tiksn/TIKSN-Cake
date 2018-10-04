@@ -33,12 +33,12 @@ namespace TIKSN.Cake.Core.Services
 
         public Versioning.Version GetNextVersion(ILogger logger, string nextVersionArgument, string nextVersionStrategyArgument)
         {
-            if (_nextVersion != null)
+            if (!ReferenceEquals(_nextVersion, null))
                 return _nextVersion;
 
             lock (_versionGetterLocker)
             {
-                if (_nextVersion != null)
+                if (!ReferenceEquals(_nextVersion, null))
                     return _nextVersion;
 
                 if (nextVersionArgument != null && nextVersionStrategyArgument != null)
@@ -86,7 +86,7 @@ namespace TIKSN.Cake.Core.Services
 
             lock (_versionSetterLocker)
             {
-                if (_latestVersion != null)
+                if (!ReferenceEquals(_latestVersion, null))
                     throw new InvalidOperationException("Version already set. This operation can be done only once.");
 
                 _latestVersion = convert(latestVersion);
