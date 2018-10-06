@@ -47,7 +47,7 @@ namespace TIKSN.Cake.Core.Services
                 if (nextVersionArgument != null)
                     _nextVersion = (Versioning.Version)NuGetVersion.Parse(nextVersionArgument);
                 else
-                    _nextVersion = _versioningStrategies[nextVersionStrategyArgument].GetNextVersion(_latestVersion);
+                    _nextVersion = _versioningStrategies[nextVersionStrategyArgument ?? string.Empty].GetNextVersion(_latestVersion);
 
                 logger.LogDebug($"Estimated next version to be '{_nextVersion}'.");
             }
