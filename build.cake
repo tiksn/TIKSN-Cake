@@ -11,6 +11,7 @@
 var target = Argument("target", "Publish");
 var solution = "TIKSN Cake.sln";
 var nuspec = "TIKSN-Cake.nuspec";
+var nugetPackageId = "TIKSN-Cake";
 
 using System;
 using System.Linq;
@@ -32,7 +33,7 @@ Task("Publish")
   .IsDependentOn("Pack")
   .Does(() =>
 {
- var package = string.Format("{0}/TIKSN-Cake.{1}.nupkg", GetTrashDirectory(), GetNextEstimatedVersion());
+ var package = string.Format("{0}/{1}.{2}.nupkg", GetTrashDirectory(), nugetPackageId, (NuGetVersion)GetNextEstimatedVersion());
 
  NuGetPush(package, new NuGetPushSettings {
      Source = "nuget.org",
@@ -94,7 +95,7 @@ Task("EstimateNextVersion")
   .Description("Estimate next version.")
   .Does(() =>
 {
-  var packageList = NuGetList("TIKSN-Cake", new NuGetListSettings {
+  var packageList = NuGetList(nugetPackageId, new NuGetListSettings {
       AllVersions = false,
       Prerelease = true
       });
