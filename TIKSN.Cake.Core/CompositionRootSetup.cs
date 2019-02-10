@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using IdGen;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using TIKSN.Cake.Core.Services;
 using TIKSN.DependencyInjection;
 
@@ -17,6 +19,7 @@ namespace TIKSN.Cake.Core
             builder.RegisterType<TrashFolderServices>().As<ITrashFolderServices>().SingleInstance();
             builder.RegisterType<LocalizationKeysGenerator>().As<ILocalizationKeysGenerator>().SingleInstance();
             builder.RegisterType<VersioningService>().As<IVersioningService>().SingleInstance();
+            RegisterIdGenerator(builder);
         }
 
         protected override void ConfigureOptions(IServiceCollection services, IConfigurationRoot configuration)
@@ -25,6 +28,14 @@ namespace TIKSN.Cake.Core
 
         protected override void ConfigureServices(IServiceCollection services)
         {
+        }
+
+        private static void RegisterIdGenerator(ContainerBuilder builder)
+        {
+            var epoch = new DateTime(2019, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var mc = new MaskConfig(47, 0, 16);
+            var generator = new IdGenerator(0, epoch, mc);
+            builder.RegisterInstance(generator).As<IIdGenerator<long>>();
         }
     }
 }
