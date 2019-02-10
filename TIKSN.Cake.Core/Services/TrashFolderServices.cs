@@ -1,21 +1,19 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using IdGen;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using TIKSN.Time;
 
 namespace TIKSN.Cake.Core.Services
 {
     public class TrashFolderServices : ITrashFolderServices
     {
         private static object trashDirectoryFullPathLocker = new object();
-        private readonly Random _random;
-        private readonly ITimeProvider _timeProvider;
+        private readonly IIdGenerator<long> _idGenerator;
         private string _trashDirectoryFullPath;
 
-        public TrashFolderServices(ITimeProvider timeProvider, Random random)
+        public TrashFolderServices(IIdGenerator<long> idGenerator)
         {
-            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
-            _random = random ?? throw new ArgumentNullException(nameof(random));
+            _idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
         }
 
         public string CreateTrashSubFolder(ILogger logger, string subfolderName)
@@ -52,7 +50,7 @@ namespace TIKSN.Cake.Core.Services
                 if (_trashDirectoryFullPath != null)
                     throw new SystemException($"Variable with name '{nameof(_trashDirectoryFullPath)}' is already set.");
 
-                _trashDirectoryFullPath = Path.Combine(rootDirectoryFullPath, ".trash", $"{_timeProvider.GetCurrentTime().Ticks}-{_random.Next()}");
+                _trashDirectoryFullPath = Path.Combine(rootDirectoryFullPath, ".trash", _idGenerator.CreateId().ToString());
                 Directory.CreateDirectory(_trashDirectoryFullPath);
                 logger.LogDebug($"Trash folder is created in location '{_trashDirectoryFullPath}'.");
             }
