@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdGen" Version="3.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" />
     <PackageReference Include="TIKSN-Framework" Version="4.0.0" />
   </ItemGroup>
 
