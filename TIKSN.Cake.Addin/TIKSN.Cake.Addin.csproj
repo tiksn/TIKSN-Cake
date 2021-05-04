@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Cake.Core" Version="1.1.0" />
-    <PackageReference Include="TIKSN-Framework" Version="4.0.0" />
+    <PackageReference Include="TIKSN-Framework" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
